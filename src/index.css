@@ -1,0 +1,278 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800;900&family=Outfit:wght@200;300;400;500;600;700&display=swap');
+
+:root {
+  --primary-color: #f57c00; /* Saffron orange */
+  --primary-rgb: 245, 124, 0;
+  --secondary-color: #ffd700; /* Gold */
+  --secondary-rgb: 255, 215, 0;
+  --accent-color: #2e7d32; /* Eco green */
+  --accent-rgb: 46, 125, 50;
+  
+  --bg-dark: #0a0b0f;
+  --bg-dark-rgb: 10, 11, 15;
+  --text-light: #f8fafc;
+  --text-muted: #94a3b8;
+  
+  --font-display: 'Cinzel', serif; /* Spiritual display font */
+  --font-sans: 'Outfit', sans-serif; /* Clean readable body font */
+  
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--primary-rgb), 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--primary-rgb), 0.6);
+}
+
+/* Main Container and Background Overlay */
+.app-container {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  z-index: 2; /* Sits above the fixed Canvas (which is z-index: 1) */
+}
+
+/* Background Atmosphere Gradients */
+.bg-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(var(--primary-rgb), 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(var(--accent-rgb), 0.05) 0%, transparent 40%),
+    linear-gradient(to bottom, #090a0d, #0d0f14);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Scroll Progress Bar at the top of screen */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color), var(--accent-color));
+  width: 0%;
+  z-index: 100;
+  box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5);
+}
+
+/* Scroll Sections */
+.scroll-section {
+  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  padding: 0 10%;
+  box-sizing: border-box;
+}
+
+/* Align text to left, right, or center depending on flow */
+.scroll-section.align-left {
+  justify-content: flex-start;
+}
+
+.scroll-section.align-right {
+  justify-content: flex-end;
+}
+
+.scroll-section.align-center {
+  justify-content: center;
+  text-align: center;
+}
+
+/* Beautiful spiritual content cards */
+.content-card {
+  max-width: 500px;
+  background: rgba(15, 17, 23, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+  opacity: 0; /* Animated by GSAP on scroll */
+  transform: translateY(30px);
+  transition: border-color 0.5s ease;
+}
+
+.content-card:hover {
+  border-color: rgba(var(--primary-rgb), 0.2);
+}
+
+.scroll-section.align-center .content-card {
+  max-width: 700px;
+}
+
+/* Typography styles */
+.section-tag {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--secondary-color);
+  margin-bottom: 12px;
+  display: inline-block;
+}
+
+.section-tag.green {
+  color: #81c784;
+}
+
+h1.section-title {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #fff 40%, var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+h1.section-title.green {
+  background: linear-gradient(135deg, #fff 40%, #81c784);
+  -webkit-background-clip: text;
+}
+
+.section-text {
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.highlight-saffron {
+  color: var(--secondary-color);
+  font-weight: 500;
+}
+
+.highlight-green {
+  color: #81c784;
+  font-weight: 500;
+}
+
+/* Scroll Hint (Hero Section) */
+.scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  animation: pulse-scroll-hint 2s infinite alternate;
+}
+
+.scroll-hint-mouse {
+  width: 22px;
+  height: 36px;
+  border: 2px solid var(--text-muted);
+  border-radius: 12px;
+  position: relative;
+}
+
+.scroll-hint-wheel {
+  width: 4px;
+  height: 8px;
+  background-color: var(--primary-color);
+  border-radius: 2px;
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: scroll-wheel-anim 1.5s infinite;
+}
+
+@keyframes pulse-scroll-hint {
+  0% { opacity: 0.4; }
+  100% { opacity: 0.9; }
+}
+
+@keyframes scroll-wheel-anim {
+  0% { top: 6px; opacity: 1; }
+  100% { top: 16px; opacity: 0; }
+}
+
+/* Audio Player control button (floating) */
+.audio-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(15, 17, 23, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--secondary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  transition: all 0.3s ease;
+}
+
+.audio-toggle:hover {
+  background: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+  transform: scale(1.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .scroll-section {
+    padding: 0 5%;
+    justify-content: center !important;
+  }
+  
+  .content-card {
+    padding: 24px;
+    margin: 0 10px;
+    text-align: center;
+  }
+  
+  h1.section-title {
+    font-size: 1.8rem;
+  }
+}
