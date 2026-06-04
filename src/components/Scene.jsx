@@ -240,7 +240,7 @@ function SceneContent({ animValues, ganeshaRef, plantRef, potRef, clayRef }) {
         <Plant ref={plantRef} position={[0, -1.45, 0]} scale={0} />
 
         {/* Ganesha Model Wrapper for centering, scaling, and positioning */}
-        <group ref={ganeshaRef} position={[0, 1.2, 0]}>
+        <group ref={ganeshaRef} position={[0, 0.8, 0]}>
           <Center>
             {/* Inner group stands Ganesha upright, parent ref controls position and scroll-Y spin */}
             <group rotation={[-Math.PI / 2, 0, 0]}>

@@ -14,7 +14,7 @@ export function App() {
   
   // Shared ref for 3D element animations inside useFrame
   const animValues = useRef({
-    ganeshaY: 1.2,
+    ganeshaY: 0.8,
     ganeshaRotY: 0,
     ganeshaScaleX: 1,
     ganeshaScaleY: 1,
