@@ -14,13 +14,7 @@ export function GaneshaModel({ opacity = 1, ...props }) {
         if (child.material) {
           child.material.transparent = true;
           child.material.opacity = opacity;
-          child.material.depthWrite = opacity > 0.1; // prevent sorting glitches when transparent
-          
-          // Boost emissive to give Ganesha a golden spiritual glow
-          if (child.material.emissive) {
-            child.material.emissive.setHex(0xd4af37);
-            child.material.emissiveIntensity = 0.15;
-          }
+          child.material.depthWrite = opacity > 0.15;
         }
       }
     });

@@ -6,11 +6,6 @@ export function Plant({ scale = 0, ...props }) {
 
   return (
     <group scale={scaleVector} {...props}>
-      {/* Soil base mound slightly inside the pot */}
-      <mesh position={[0, -0.05, 0]}>
-        <sphereGeometry args={[0.8, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2]} />
-        <meshStandardMaterial color="#3e2723" roughness={0.9} />
-      </mesh>
 
       {/* Main stem */}
       <mesh castShadow position={[0, 0.4, 0]}>

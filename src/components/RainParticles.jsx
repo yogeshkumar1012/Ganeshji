@@ -5,15 +5,17 @@ import * as THREE from 'three';
 export function RainParticles({ count = 1500, animValues }) {
   const pointsRef = useRef();
 
-  // Create initial random rain particles spread around coordinate space
+  // Create initial random rain particles concentrated in a cylinder above the pot
   const [positions, speeds] = useMemo(() => {
     const pos = new Float32Array(count * 3);
     const spd = new Float32Array(count);
     for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 12; // X range
-      pos[i * 3 + 1] = Math.random() * 10 + 2;   // Y range (starts high up)
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 12; // Z range
-      spd[i] = Math.random() * 0.12 + 0.08;      // Individual droplet speeds
+      const angle = Math.random() * Math.PI * 2;
+      const radius = Math.sqrt(Math.random()) * 0.82; // Concentrated within pot interior radius
+      pos[i * 3] = Math.cos(angle) * radius;        // X
+      pos[i * 3 + 1] = Math.random() * 8 + 1.2;     // Y (starts above pot)
+      pos[i * 3 + 2] = Math.sin(angle) * radius;    // Z
+      spd[i] = Math.random() * 0.12 + 0.08;         // Droplet speeds
     }
     return [pos, spd];
   }, [count]);
@@ -43,11 +45,13 @@ export function RainParticles({ count = 1500, animValues }) {
       // Fall speed is accelerated by the rain intensity
       y -= speeds[i] * (0.5 + intensity * 1.5);
       
-      // Reset particle back to the cloud level when it reaches the bottom
-      if (y < -3.0) {
-        y = Math.random() * 5 + 5;
-        posAttr.setX(i, (Math.random() - 0.5) * 10);
-        posAttr.setZ(i, (Math.random() - 0.5) * 10);
+      // Reset particle back to the cloud level when it reaches the bottom of the pot
+      if (y < -1.8) {
+        y = Math.random() * 4 + 5; // Reset high up
+        const angle = Math.random() * Math.PI * 2;
+        const radius = Math.sqrt(Math.random()) * 0.82;
+        posAttr.setX(i, Math.cos(angle) * radius);
+        posAttr.setZ(i, Math.sin(angle) * radius);
       }
       posAttr.setY(i, y);
     }

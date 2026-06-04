@@ -16,8 +16,12 @@ export function App() {
   const animValues = useRef({
     ganeshaY: 1.2,
     ganeshaRotY: 0,
-    ganeshaScale: 1,
+    ganeshaScaleX: 1,
+    ganeshaScaleY: 1,
+    ganeshaScaleZ: 1,
     ganeshaOpacity: 1,
+    ganeshaColorBlend: 0, // 0 = gold, 1 = wet clay brown
+    clayScale: 0,         // rises from 0 to 1 inside the pot
     rainIntensity: 0,
     plantScale: 0
   });
@@ -26,6 +30,7 @@ export function App() {
   const ganeshaRef = useRef();
   const plantRef = useRef();
   const potRef = useRef();
+  const clayRef = useRef();
 
   // Audio system state (using Web Audio API for a self-contained meditative drone synth)
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
@@ -131,27 +136,42 @@ export function App() {
       ease: 'power1.inOut'
     }, 0);
 
-    // Phase 2: Rain starts vertical dropping (fades in during descent)
+    // Phase 2: Concentrated column rain starts falling *only* above the pot
     tl.to(animValues.current, {
       rainIntensity: 1.0,
       ease: 'sine.inOut'
     }, 0.15);
 
-    // Phase 3: Ganesha dissolves / melts (opacity -> 0, scale -> 0.04)
-    // Starts when Ganesha enters the pot (around 45% scroll)
+    // Phase 3: Ganesha enters the pot and dissolves
+    // - Texture starts blending to wet mud brown as Ganesha enters the rain column (between 30% and 45% scroll)
+    tl.to(animValues.current, {
+      ganeshaColorBlend: 1.0,
+      ease: 'power1.inOut'
+    }, 0.30);
+
+    // - Ganesha physically squishes down on Y-axis (melts) and expands slightly on X/Z while fading out
+    // Complete dissolution finishes at 52% scroll
     tl.to(animValues.current, {
       ganeshaOpacity: 0,
-      ganeshaScale: 0.03,
+      ganeshaScaleY: 0.03,
+      ganeshaScaleX: 1.25,
+      ganeshaScaleZ: 1.25,
       ease: 'power2.in'
-    }, 0.45);
+    }, 0.40);
 
-    // Phase 4: Small green plant scales up from the pot soil (starts growing at 65% scroll)
+    // - ONLY AFTER Ganesha is fully dissolved, the clay cylinder rises up from the bottom of the pot, filling it (between 54% and 68% scroll)
+    tl.to(animValues.current, {
+      clayScale: 1.0,
+      ease: 'power1.inOut'
+    }, 0.54);
+
+    // Phase 4: Small green plant scales up from the fully risen clay (starts growing at 70% scroll)
     tl.to(animValues.current, {
       plantScale: 1.1,
       ease: 'back.out(1.8)'
-    }, 0.65);
+    }, 0.70);
 
-    // Final clean-up: Rain dies down once the plant is fully grown
+    // Final clean-up: Rain dies down once the plant is fully grown (between 85% and 95% scroll)
     tl.to(animValues.current, {
       rainIntensity: 0.1,
       ease: 'sine.out'
@@ -173,6 +193,7 @@ export function App() {
         ganeshaRef={ganeshaRef}
         plantRef={plantRef}
         potRef={potRef}
+        clayRef={clayRef}
       />
 
       {/* SECTION 1: HERO */}
@@ -193,14 +214,14 @@ export function App() {
         </div>
       </section>
 
-      {/* SECTION 2: THE RECEIVING POT & RAIN */}
+      {/* SECTION 2: THE EMPTY POT & TARGETED RAIN */}
       <section className="scroll-section align-right">
         <div className="content-card">
           <span className="section-tag">Phase 01</span>
-          <h1 className="section-title">Nurturing Earth</h1>
+          <h1 className="section-title">The Empty Vessel</h1>
           <p className="section-text">
-            At the bottom of the scene lies a terracotta clay pot filled with rich, organic soil. 
-            As we begin the transition, <span className="highlight-saffron">sacred drops of rain</span> start falling from the heavens, softening the earth to receive the Lord.
+            At the bottom of the scene sits a glass-like <span className="highlight-saffron">transparent pot</span>, completely empty.
+            As Ganesha begins his descent, a focused column of sacred rain starts falling directly into the pot, preparing it to receive the Lord.
           </p>
         </div>
       </section>
@@ -209,10 +230,10 @@ export function App() {
       <section className="scroll-section align-left">
         <div className="content-card">
           <span className="section-tag">Phase 02</span>
-          <h1 className="section-title">Sacred Dissolution</h1>
+          <h1 className="section-title">Clay Dissolution</h1>
           <p className="section-text">
-            Entering the pot, the water dissolves Ganesha's form. 
-            His physical body returns to mud, and His essence merges back with the soil, leaving behind <span className="highlight-saffron">seeds of life</span> embedded inside.
+            As Ganesha enters the rain column inside the pot, his form begins to melt, turning from golden light into dark, wet clay.
+            Simultaneously, the <span className="highlight-saffron">clay level rises</span> from the bottom, filling the transparent pot with rich, fertile soil.
           </p>
         </div>
       </section>
@@ -223,8 +244,8 @@ export function App() {
           <span className="section-tag green">Phase 03</span>
           <h1 className="section-title green">Eternal Rebirth</h1>
           <p className="section-text">
-            From the merged soil of Visarjan, a <span className="highlight-green">new green seedling sprouts</span> and grows towards the light. 
-            The divine energy is not gone—it has simply transformed, giving birth to a living plant.
+            From the clay of Visarjan, a <span className="highlight-green">new green seedling sprouts</span> and grows towards the light. 
+            The divine energy is not gone—it has transformed, giving birth to a living plant from the seeds within the dissolved clay.
           </p>
         </div>
       </section>
